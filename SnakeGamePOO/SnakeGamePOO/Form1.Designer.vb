@@ -1,9 +1,9 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class Form1
     Inherits System.Windows.Forms.Form
 
     'Descartar substituições de formulário para limpar a lista de componentes.
-    <System.Diagnostics.DebuggerNonUserCode()> _
+    <System.Diagnostics.DebuggerNonUserCode()>
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
         Try
             If disposing AndAlso components IsNot Nothing Then
@@ -20,17 +20,17 @@ Partial Class Form1
     'OBSERVAÇÃO: o procedimento a seguir é exigido pelo Windows Form Designer
     'Pode ser modificado usando o Windows Form Designer.  
     'Não o modifique usando o editor de códigos.
-    <System.Diagnostics.DebuggerStepThrough()> _
+    <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.PB_Habitat = New System.Windows.Forms.PictureBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Label0 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.ComboBox1 = New System.Windows.Forms.ComboBox()
-        Me.Button1 = New System.Windows.Forms.Button()
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
         Me.RecordsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.NãoConfiguradoToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.EstatisticasParaNerdsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.InfosToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         CType(Me.PB_Habitat, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.MenuStrip1.SuspendLayout()
         Me.SuspendLayout()
@@ -76,7 +76,7 @@ Partial Class Form1
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(782, 26)
         Me.Label2.TabIndex = 5
-        Me.Label2.Text = "Label3"
+        Me.Label2.Text = "Label2"
         Me.Label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'ComboBox1
@@ -86,22 +86,13 @@ Partial Class Form1
         Me.ComboBox1.FormattingEnabled = True
         Me.ComboBox1.Location = New System.Drawing.Point(621, 49)
         Me.ComboBox1.Name = "ComboBox1"
-        Me.ComboBox1.Size = New System.Drawing.Size(107, 26)
+        Me.ComboBox1.Size = New System.Drawing.Size(149, 26)
         Me.ComboBox1.TabIndex = 10
         Me.ComboBox1.TabStop = False
         '
-        'Button1
-        '
-        Me.Button1.Location = New System.Drawing.Point(734, 49)
-        Me.Button1.Name = "Button1"
-        Me.Button1.Size = New System.Drawing.Size(36, 26)
-        Me.Button1.TabIndex = 11
-        Me.Button1.Text = "Ok"
-        Me.Button1.UseVisualStyleBackColor = True
-        '
         'MenuStrip1
         '
-        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.RecordsToolStripMenuItem})
+        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.EstatisticasParaNerdsToolStripMenuItem, Me.RecordsToolStripMenuItem, Me.InfosToolStripMenuItem})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
         Me.MenuStrip1.Name = "MenuStrip1"
         Me.MenuStrip1.Size = New System.Drawing.Size(782, 24)
@@ -110,23 +101,29 @@ Partial Class Form1
         '
         'RecordsToolStripMenuItem
         '
-        Me.RecordsToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.NãoConfiguradoToolStripMenuItem})
         Me.RecordsToolStripMenuItem.Name = "RecordsToolStripMenuItem"
-        Me.RecordsToolStripMenuItem.Size = New System.Drawing.Size(61, 20)
-        Me.RecordsToolStripMenuItem.Text = "Records"
+        Me.RecordsToolStripMenuItem.Size = New System.Drawing.Size(55, 20)
+        Me.RecordsToolStripMenuItem.Text = "Cheats"
         '
-        'NãoConfiguradoToolStripMenuItem
+        'EstatisticasParaNerdsToolStripMenuItem
         '
-        Me.NãoConfiguradoToolStripMenuItem.Name = "NãoConfiguradoToolStripMenuItem"
-        Me.NãoConfiguradoToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
-        Me.NãoConfiguradoToolStripMenuItem.Text = "Não configurado"
+        Me.EstatisticasParaNerdsToolStripMenuItem.Checked = True
+        Me.EstatisticasParaNerdsToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.EstatisticasParaNerdsToolStripMenuItem.Name = "EstatisticasParaNerdsToolStripMenuItem"
+        Me.EstatisticasParaNerdsToolStripMenuItem.Size = New System.Drawing.Size(126, 20)
+        Me.EstatisticasParaNerdsToolStripMenuItem.Text = "Números para nerds"
+        '
+        'InfosToolStripMenuItem
+        '
+        Me.InfosToolStripMenuItem.Name = "InfosToolStripMenuItem"
+        Me.InfosToolStripMenuItem.Size = New System.Drawing.Size(45, 20)
+        Me.InfosToolStripMenuItem.Text = "Infos"
         '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(782, 665)
-        Me.Controls.Add(Me.Button1)
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.ComboBox1)
         Me.Controls.Add(Me.Label0)
@@ -147,8 +144,8 @@ Partial Class Form1
     Friend WithEvents Label0 As Label
     Friend WithEvents Label2 As Label
     Friend WithEvents ComboBox1 As ComboBox
-    Friend WithEvents Button1 As Button
     Friend WithEvents MenuStrip1 As MenuStrip
     Friend WithEvents RecordsToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents NãoConfiguradoToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents EstatisticasParaNerdsToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents InfosToolStripMenuItem As ToolStripMenuItem
 End Class
