@@ -28,9 +28,11 @@ Partial Class Form1
         Me.Label2 = New System.Windows.Forms.Label()
         Me.ComboBox1 = New System.Windows.Forms.ComboBox()
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
-        Me.RecordsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.EstatisticasParaNerdsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.CheatsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.InfosToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ComoGanharToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.OpçõesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         CType(Me.PB_Habitat, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.MenuStrip1.SuspendLayout()
         Me.SuspendLayout()
@@ -61,9 +63,9 @@ Partial Class Form1
         Me.Label0.Font = New System.Drawing.Font("Microsoft Sans Serif", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label0.Location = New System.Drawing.Point(618, 28)
         Me.Label0.Name = "Label0"
-        Me.Label0.Size = New System.Drawing.Size(58, 18)
+        Me.Label0.Size = New System.Drawing.Size(143, 18)
         Me.Label0.TabIndex = 3
-        Me.Label0.Text = "Habitat:"
+        Me.Label0.Text = "Dimensões do Jogo"
         '
         'Label2
         '
@@ -74,7 +76,7 @@ Partial Class Form1
         Me.Label2.ForeColor = System.Drawing.Color.White
         Me.Label2.Location = New System.Drawing.Point(0, 639)
         Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(782, 26)
+        Me.Label2.Size = New System.Drawing.Size(784, 26)
         Me.Label2.TabIndex = 5
         Me.Label2.Text = "Label2"
         Me.Label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
@@ -92,38 +94,51 @@ Partial Class Form1
         '
         'MenuStrip1
         '
-        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.EstatisticasParaNerdsToolStripMenuItem, Me.RecordsToolStripMenuItem, Me.InfosToolStripMenuItem})
+        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.EstatisticasParaNerdsToolStripMenuItem, Me.CheatsToolStripMenuItem, Me.InfosToolStripMenuItem, Me.OpçõesToolStripMenuItem})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
         Me.MenuStrip1.Name = "MenuStrip1"
-        Me.MenuStrip1.Size = New System.Drawing.Size(782, 24)
+        Me.MenuStrip1.Size = New System.Drawing.Size(784, 24)
         Me.MenuStrip1.TabIndex = 12
         Me.MenuStrip1.Text = "MenuStrip1"
-        '
-        'RecordsToolStripMenuItem
-        '
-        Me.RecordsToolStripMenuItem.Name = "RecordsToolStripMenuItem"
-        Me.RecordsToolStripMenuItem.Size = New System.Drawing.Size(55, 20)
-        Me.RecordsToolStripMenuItem.Text = "Cheats"
         '
         'EstatisticasParaNerdsToolStripMenuItem
         '
         Me.EstatisticasParaNerdsToolStripMenuItem.Checked = True
         Me.EstatisticasParaNerdsToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked
         Me.EstatisticasParaNerdsToolStripMenuItem.Name = "EstatisticasParaNerdsToolStripMenuItem"
-        Me.EstatisticasParaNerdsToolStripMenuItem.Size = New System.Drawing.Size(126, 20)
-        Me.EstatisticasParaNerdsToolStripMenuItem.Text = "Números para nerds"
+        Me.EstatisticasParaNerdsToolStripMenuItem.Size = New System.Drawing.Size(114, 20)
+        Me.EstatisticasParaNerdsToolStripMenuItem.Text = "Valores para nerds"
+        '
+        'CheatsToolStripMenuItem
+        '
+        Me.CheatsToolStripMenuItem.Name = "CheatsToolStripMenuItem"
+        Me.CheatsToolStripMenuItem.Size = New System.Drawing.Size(55, 20)
+        Me.CheatsToolStripMenuItem.Text = "Cheats"
         '
         'InfosToolStripMenuItem
         '
+        Me.InfosToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ComoGanharToolStripMenuItem})
         Me.InfosToolStripMenuItem.Name = "InfosToolStripMenuItem"
-        Me.InfosToolStripMenuItem.Size = New System.Drawing.Size(45, 20)
-        Me.InfosToolStripMenuItem.Text = "Infos"
+        Me.InfosToolStripMenuItem.Size = New System.Drawing.Size(79, 20)
+        Me.InfosToolStripMenuItem.Text = "Mensagens"
+        '
+        'ComoGanharToolStripMenuItem
+        '
+        Me.ComoGanharToolStripMenuItem.Name = "ComoGanharToolStripMenuItem"
+        Me.ComoGanharToolStripMenuItem.Size = New System.Drawing.Size(147, 22)
+        Me.ComoGanharToolStripMenuItem.Text = "Como ganhar"
+        '
+        'OpçõesToolStripMenuItem
+        '
+        Me.OpçõesToolStripMenuItem.Name = "OpçõesToolStripMenuItem"
+        Me.OpçõesToolStripMenuItem.Size = New System.Drawing.Size(49, 20)
+        Me.OpçõesToolStripMenuItem.Text = "Sobre"
         '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(782, 665)
+        Me.ClientSize = New System.Drawing.Size(784, 665)
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.ComboBox1)
         Me.Controls.Add(Me.Label0)
@@ -145,7 +160,9 @@ Partial Class Form1
     Friend WithEvents Label2 As Label
     Friend WithEvents ComboBox1 As ComboBox
     Friend WithEvents MenuStrip1 As MenuStrip
-    Friend WithEvents RecordsToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents CheatsToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents EstatisticasParaNerdsToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents InfosToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents OpçõesToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents ComoGanharToolStripMenuItem As ToolStripMenuItem
 End Class
