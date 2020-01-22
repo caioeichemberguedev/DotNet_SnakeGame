@@ -3,9 +3,12 @@ Imports System.Threading.Thread
 
 Public Class Form1
 
+    Public B_VisualizaMensagem As Boolean = True
+    Public N_Game_Dimensao As Integer
+    Public N_Game_matrix As Integer
+
     Private ListaCobra As ArrayList = New ArrayList
     Private ListaCampo As ArrayList = New ArrayList
-    Private ListaHabitat As ArrayList = New ArrayList
 
     Private ListaDe4TeclasPressionadas As New List(Of String)
     Private ListaQuePegaDoArrayParaComparar As New List(Of String)
@@ -18,7 +21,10 @@ Public Class Form1
     Private N_Snake_Regeneracao As Integer
     Private N_Snake_PontosPercorridos As Integer
     Private B_Snake_Fantasma As Boolean = False
+    Private BR_Snake_BodyColor As Brush = Brushes.Green
 
+    Const N_Relogio0_ObterValorMaximoDeTick As Integer = 80
+    Const N_Relogio0_ObterValorMinimoDeTick As Integer = 30
     Private N_Relogio0_Tick As Double
     Private N_Relogio1_TrocaCor As Integer
     Private N_Game_TimerSecond As Integer
@@ -35,8 +41,6 @@ Public Class Form1
     Private N_Food_Ponto As Integer
     Private R_Food_Sorteio As New Random
 
-    Private N_Habitat_Matriz As Integer = 30
-
     'PARA ESTATISTICA DE PORCENTAGEM DE ORIENTAÇÃO
     Private n_Game_GoToNorte As Integer
     Private n_Game_GoToSul As Integer
@@ -44,15 +48,26 @@ Public Class Form1
     Private n_Game_GoToOeste As Integer
     'PARA ESTATISTICA DE PORCENTAGEM DE ORIENTAÇÃO
 
+    Private Sub ComboBox1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox1.SelectedIndexChanged
+        N_Game_Dimensao = CInt(ComboBox1.Text)
+        ConfiguraDimensões(N_Game_Dimensao)
+        PreparandoGame()
+        N_Game_matrix = 600 / N_Game_Dimensao
+        PB_Habitat.Refresh()
+        If B_VisualizaMensagem = True Then
+            Form2.Show()
+        End If
+    End Sub
 
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         ListaDeCheatCadastrado.Add(New Cheats("Vida Infinita", "L", "I", "F", "E", False))
         ConfiguraTela()
-        ConfiguraDimensões()
-        PopulaEConfiguraHabitat()
         CriandoTimers()
+        PopulaDimensoes()
+        ConfiguraDimensões(N_Game_Dimensao)
         PreparandoGame()
+        Form2.Close()
     End Sub
 
     Private Sub ConfiguraTela()
@@ -75,36 +90,37 @@ Public Class Form1
         AddHandler T_Game_Timer(2).Tick, AddressOf Relogio2_AtualizaTempoJogado
     End Sub
 
-    Private Sub ConfiguraDimensões()
+    Private Sub PopulaDimensoes()
+        For k = 0 To 4
+            ComboBox1.Items.Add(20 + (k * 10))
+        Next
+        ComboBox1.SelectedIndex = 0
+    End Sub
+
+    Private Sub ConfiguraDimensões(ByVal LarguraCorpoDaCobra As Integer)
+        ListaCampo.Clear()
+        Dim PontoCampo As Point
         Dim n_Qtd_Linha As Integer = 0
         Dim n_Qtd_Colunas As Integer = 0
-        Dim PontoCampo As Point
+        Dim IndexColunaLinha As Double = 600 / LarguraCorpoDaCobra
+        Dim DefineCentroCorpoCobra As Double = LarguraCorpoDaCobra / 2
 
-        For k = 0 To TotalDeCampoPossiveis(N_Habitat_Matriz)
-            PontoCampo = New Point(10 * ((n_Qtd_Colunas * 2) + 1), 10 * ((n_Qtd_Linha * 2) + 1))
+        For k = 0 To TotalDeCampoPossiveis(IndexColunaLinha)
+            PontoCampo = New Point(DefineCentroCorpoCobra * ((n_Qtd_Colunas * 2) + 1), DefineCentroCorpoCobra * ((n_Qtd_Linha * 2) + 1))
             ListaCampo.Add(New DimensoesHabitat(PontoCampo, n_Qtd_Linha, n_Qtd_Colunas))
-            If n_Qtd_Colunas = N_Habitat_Matriz - 1 Then
+            If n_Qtd_Colunas = IndexColunaLinha - 1 Then
                 n_Qtd_Colunas = 0
                 n_Qtd_Linha += 1
             Else
                 n_Qtd_Colunas += 1
             End If
         Next
+
     End Sub
 
-    Private Sub PopulaEConfiguraHabitat()
-        ListaHabitat.Add(New Habitat("Laboratory", Color.Black, Brushes.Green, Brushes.LimeGreen))
-        ListaHabitat.Add(New Habitat("Forest", Color.DarkGreen, Brushes.Black, Brushes.Gray))
-        ListaHabitat.Add(New Habitat("Desert", Color.Beige, Brushes.Purple, Brushes.Magenta))
-        ListaHabitat.Add(New Habitat("Water", Color.DeepSkyBlue, Brushes.DarkBlue, Brushes.Blue))
-        ListaHabitat.Add(New Habitat("Mountain", Color.Gray, Brushes.Red, Brushes.Orange))
-        For k = 0 To ListaHabitat.Count - 1
-            ComboBox1.Items.Add(ListaHabitat(k).GSName)
-        Next
-        ComboBox1.SelectedIndex = 0
-        PB_Habitat.BackColor = ListaHabitat(ComboBox1.SelectedIndex).GSColorMap
-        Refresh()
-    End Sub
+    Public Function TotalDeCampoPossiveis(ByVal Valor As Integer) As Integer
+        Return (Valor ^ 2) - 1
+    End Function
 
     Private Sub PreparandoGame()
         For k = 0 To 2
@@ -113,7 +129,7 @@ Public Class Form1
         N_Snake_Regeneracao = 3
         N_Snake_Nivel = 0
         N_Snake_TamanhoInicial = 4
-        N_Relogio0_Tick = 75
+        N_Relogio0_Tick = N_Game_Dimensao + N_Relogio0_ObterValorMaximoDeTick
         T_Game_Timer(0).Interval = N_Relogio0_Tick 'TEMPO INICIAL DO JOGO PARA INTERVALO DE MOVIMENTAÇÃO DO CORPO DA COBRA
         T_Game_Timer(1).Interval = 120 'INTERVALO DE TEMPO EM QUE A COBRA MUDA DE COR, IDENTIFICANDO COLISÃO COM PROPRIO CORPO/VIDA ZERADA
         T_Game_Timer(2).Interval = 1000 'RELOGIO PARA TEMPO JOGADO
@@ -136,7 +152,7 @@ Public Class Form1
 
         For k = 0 To N_Snake_TamanhoInicial - 1
             Dim Valor1 As Integer = (N_Snake_TamanhoInicial - 1) - k
-            ListaCobra.Add(New Snake(Valor1, ListaCampo(Valor1).GSLocation, ListaHabitat(ComboBox1.SelectedIndex).GSColorHeadSnake, ListaHabitat(ComboBox1.SelectedIndex).GSColorBodySnake, "Leste"))
+            ListaCobra.Add(New Snake(Valor1, ListaCampo(Valor1).GSLocation, "Leste"))
         Next
         N_Food_Ponto = GeraComida()
 
@@ -144,11 +160,6 @@ Public Class Form1
         AtualizaEstatisticas()
         Refresh()
     End Sub
-
-    Private Function TotalDeCampoPossiveis(ByVal Valor As Integer) As Integer
-        Return (Valor ^ 2) - 1
-    End Function
-
 
     Private Sub Direcionamento_KeyDown(sender As Object, e As KeyEventArgs) Handles Me.KeyDown
 
@@ -276,27 +287,27 @@ Public Class Form1
         Select Case ListaCobra(0).GSDirecao
             Case "Norte"
                 If ListaCampo(ListaCobra(0).GSIndexCampo).GSLineNumber > 0 Then
-                    ListaCobra(0).GSIndexCampo -= N_Habitat_Matriz
+                    ListaCobra(0).GSIndexCampo -= N_Game_matrix
                 Else
-                    ListaCobra(0).GSIndexCampo += (TotalDeCampoPossiveis(N_Habitat_Matriz) - (N_Habitat_Matriz - 1))
+                    ListaCobra(0).GSIndexCampo += (TotalDeCampoPossiveis(N_Game_matrix) - (N_Game_matrix - 1))
                 End If
             Case "Sul"
-                If ListaCampo(ListaCobra(0).GSIndexCampo).GSLineNumber < N_Habitat_Matriz - 1 Then
-                    ListaCobra(0).GSIndexCampo += N_Habitat_Matriz
+                If ListaCampo(ListaCobra(0).GSIndexCampo).GSLineNumber < N_Game_matrix - 1 Then
+                    ListaCobra(0).GSIndexCampo += N_Game_matrix
                 Else
-                    ListaCobra(0).GSIndexCampo -= (TotalDeCampoPossiveis(N_Habitat_Matriz) - (N_Habitat_Matriz - 1))
+                    ListaCobra(0).GSIndexCampo -= (TotalDeCampoPossiveis(N_Game_matrix) - (N_Game_matrix - 1))
                 End If
             Case "Leste"
-                If ListaCampo(ListaCobra(0).GSIndexCampo).GSColumnNumber < N_Habitat_Matriz - 1 Then
+                If ListaCampo(ListaCobra(0).GSIndexCampo).GSColumnNumber < N_Game_matrix - 1 Then
                     ListaCobra(0).GSIndexCampo += 1
                 Else
-                    ListaCobra(0).GSIndexCampo -= N_Habitat_Matriz - 1
+                    ListaCobra(0).GSIndexCampo -= N_Game_matrix - 1
                 End If
             Case "Oeste"
                 If ListaCampo(ListaCobra(0).GSIndexCampo).GSColumnNumber > 0 Then
                     ListaCobra(0).GSIndexCampo -= 1
                 Else
-                    ListaCobra(0).GSIndexCampo += N_Habitat_Matriz - 1
+                    ListaCobra(0).GSIndexCampo += N_Game_matrix - 1
                 End If
         End Select
 
@@ -327,12 +338,12 @@ Public Class Form1
             If ComeuComida(ValorIndexHead) = True Then
                 N_Snake_Nivel += 1
                 N_Game_PontuacaoGeral = CalculaPontuacao(N_Snake_Nivel, N_Snake_PontosPercorridos, ListaCobra.Count)
-                ListaCobra.Add(New Snake(ListaCobra(ListaCobra.Count - 1).GSIndexCampo, ListaCobra(ListaCobra.Count - 1).GSLocation, ListaHabitat(ComboBox1.SelectedIndex).GSColorHeadSnake, ListaHabitat(ComboBox1.SelectedIndex).GSColorBodySnake, "Leste"))
+                ListaCobra.Add(New Snake(ListaCobra(ListaCobra.Count - 1).GSIndexCampo, ListaCobra(ListaCobra.Count - 1).GSLocation, "Leste"))
                 If VerificaSeGanhouJogo(ListaCobra.Count) = True Then
                     N_Food_Ponto = 900
                     Return True
                 Else
-                    AumentaVelocidadeDoJogo()
+                    If AumentaVelocidadeDoJogo(N_Relogio0_Tick, N_Game_Dimensao, N_Relogio0_ObterValorMinimoDeTick) = True Then T_Game_Timer(0).Interval = N_Relogio0_Tick
                     N_Food_Ponto = GeraComida()
                 End If
             End If
@@ -391,20 +402,21 @@ Public Class Form1
     End Function
 
     Private Function VerificaSeGanhouJogo(ByVal TamanhoDaSnake As Integer) As Boolean
-        If TamanhoDaSnake = TotalDeCampoPossiveis(N_Habitat_Matriz) - 39 Then
-            'A Snake não preenche todo o espaço para ganhar pois deixaria a geração de novos foods com delay muito perceptivel
+        If ((TamanhoDaSnake * 100) / (TotalDeCampoPossiveis(N_Game_matrix) + 1)) > 70 Then
+            'ao preencher mais que 70% do campo(para que não fique um delay gigante na geração da comida) o jogador é campeão 
             B_Game_Vitoria = True
             Return True
         End If
         Return False
     End Function
 
-    Private Sub AumentaVelocidadeDoJogo()
-        If N_Relogio0_Tick > 50 Then
-            N_Relogio0_Tick -= 0.2
-            T_Game_Timer(0).Interval = N_Relogio0_Tick
+    Private Function AumentaVelocidadeDoJogo(ByVal TickAtual As Double, ByVal Dimensao As Integer, ByVal ValorMinimoDeTick As Integer) As Boolean
+        If TickAtual > Dimensao + ValorMinimoDeTick Then
+            N_Relogio0_Tick -= Dimensao * 0.01
+            Return True
         End If
-    End Sub
+        Return False
+    End Function
 
     Private Function CalculaPontuacao(ByVal FrutasComidas, ByVal PontosPercorridos, ByVal TamanhoSnake) As Integer
         If FrutasComidas = 0 Then
@@ -417,7 +429,7 @@ Public Class Form1
         If B_Game_Dead = False Then
             If T_Game_Timer(0).Enabled = False And N_Snake_PontosPercorridos = 0 Then
                 Label2.ForeColor = Color.White
-                Label2.Text = "Ao definir o habitat pressione [ENTER] para iniciar"
+                Label2.Text = "Ao definir as dimensões, pressione [ENTER] para iniciar"
             ElseIf B_Game_Pause = False And B_Game_Vitoria = False Then
                 Label2.ForeColor = Color.DeepSkyBlue
                 Label2.Text = "Pressione [ENTER] para Pausar OU [R] para resetar"
@@ -450,18 +462,17 @@ Public Class Form1
         e.Graphics.SmoothingMode = SmoothingMode.AntiAlias
 
         For k = 0 To ListaCobra.Count - 1
-            Dim CorpoCobra As New Rectangle(ListaCobra(k).GSLocation.X - 10, ListaCobra(k).GSLocation.Y - 10, 20, 20)
-            If k <> 0 Then
-                Dim HeadColor As Brush = ListaCobra(k).GSColoracaoHead
-                e.Graphics.FillRectangle(HeadColor, CorpoCobra)
+            Dim CorpoCobra As New Rectangle(ListaCobra(k).GSLocation.X - (N_Game_Dimensao / 2), ListaCobra(k).GSLocation.Y - (N_Game_Dimensao / 2), N_Game_Dimensao, N_Game_Dimensao)
+            If k = 0 And B_Game_Dead = False Then
+                e.Graphics.FillRectangle(Brushes.LimeGreen, CorpoCobra)
             Else
-                Dim BodyColor As Brush = ListaCobra(k).GSColoracaoBody
-                e.Graphics.FillRectangle(BodyColor, CorpoCobra)
+                e.Graphics.FillRectangle(BR_Snake_BodyColor, CorpoCobra)
             End If
         Next
 
-        If B_Game_Vitoria = False And B_Game_Dead = False Then
-            e.Graphics.FillEllipse(Brushes.Red, ListaCampo(N_Food_Ponto).GSLocation.X - 9, ListaCampo(N_Food_Ponto).GSLocation.Y - 9, 18, 18)
+        If B_Game_Vitoria = False And B_Game_Dead = False And ListaCampo.Count > 0 Then
+            Dim rectfood As Rectangle = New Rectangle(ListaCampo(N_Food_Ponto).GSLocation.X - ((N_Game_Dimensao / 2) - 1), ListaCampo(N_Food_Ponto).GSLocation.Y - ((N_Game_Dimensao / 2) - 1), N_Game_Dimensao - 2, N_Game_Dimensao - 2)
+            e.Graphics.FillEllipse(Brushes.Red, rectfood)
         End If
 
     End Sub
@@ -473,27 +484,23 @@ Public Class Form1
         If N_Relogio1_TrocaCor Mod 2 = 0 Then
             If B_Game_Dead = False Then
                 For k = 0 To ListaCobra.Count - 1
-                    ListaCobra(k).GSColoracaoHead = Brushes.White
-                    ListaCobra(k).GSColoracaoBody = Brushes.WhiteSmoke
+                    BR_Snake_BodyColor = Brushes.WhiteSmoke
                 Next
             Else
                 For k = 0 To ListaCobra.Count - 1
-                    ListaCobra(k).GSColoracaoHead = Brushes.DarkRed
-                    ListaCobra(k).GSColoracaoBody = Brushes.Red
+                    BR_Snake_BodyColor = Brushes.DarkRed
                 Next
             End If
         Else
             For k = 0 To ListaCobra.Count - 1
-                ListaCobra(k).GSColoracaoHead = ListaHabitat(IndexValue).GSColorHeadSnake
-                ListaCobra(k).GSColoracaoBody = ListaHabitat(IndexValue).GSColorBodySnake
+                BR_Snake_BodyColor = Brushes.Green
             Next
         End If
         N_Relogio1_TrocaCor -= 1
 
         If N_Relogio1_TrocaCor = 0 Then
             For k = 0 To ListaCobra.Count - 1
-                ListaCobra(k).GSColoracaoHead = ListaHabitat(IndexValue).GSColorHeadSnake
-                ListaCobra(k).GSColoracaoBody = ListaHabitat(IndexValue).GSColorBodySnake
+                BR_Snake_BodyColor = Brushes.Green
             Next
             N_Relogio1_TrocaCor = 12
             T_Game_Timer(1).Stop()
@@ -521,14 +528,6 @@ Public Class Form1
         S_Game_TimerGeneral = S_Game_TimerMinute & ":" & S_Game_TimerSecond
     End Sub
 
-    Private Sub ComboBox1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox1.SelectedIndexChanged
-        PB_Habitat.BackColor = ListaHabitat(ComboBox1.SelectedIndex).GSColorMap
-        For k = 0 To ListaCobra.Count - 1
-            ListaCobra(k).GSColoracaoHead = ListaHabitat(ComboBox1.SelectedIndex).GSColorHeadSnake
-            ListaCobra(k).GSColoracaoBody = ListaHabitat(ComboBox1.SelectedIndex).GSColorBodySnake
-        Next
-        Refresh()
-    End Sub
 
     Private Sub StartGame()
         ComboBox1.Enabled = False
@@ -545,7 +544,7 @@ Public Class Form1
         AtualizaInformativo()
     End Sub
 
-    Private Sub RecordsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles RecordsToolStripMenuItem.Click
+    Private Sub CheatsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CheatsToolStripMenuItem.Click
         Dim StatusCodigo As String
         If ListaDeCheatCadastrado(0).GSAtivado = False Then
             StatusCodigo = "Desativado"
@@ -566,6 +565,7 @@ Public Class Form1
                         "Head Point: " & vbCrLf & ListaCobra(0).GSIndexCampo & vbCrLf & vbCrLf &
                         "Maçãs comidas: " & vbCrLf & N_Snake_Nivel & vbCrLf & vbCrLf &
                         "Blocos percorridos: " & vbCrLf & N_Snake_PontosPercorridos & vbCrLf & vbCrLf &
+                        "Velocidade máxima nesta config.:" & vbCrLf & Format(CalculaVelocidadeMaxima(N_Game_Dimensao, N_Relogio0_ObterValorMinimoDeTick), "0.00") & " Blocos por segundo" & vbCrLf & vbCrLf &
                         "Porcentagem de mudança na orientação:" & vbCrLf &
                                     "N = " & Format(porcN, "0.00") & "%" & vbCrLf &
                                     "S = " & Format(porcS, "0.00") & "%" & vbCrLf &
@@ -573,7 +573,16 @@ Public Class Form1
                                     "O = " & Format(porcO, "0.00") & "%", "Informações adicionais do jogo atual")
     End Sub
 
-    Private Sub InfosToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles InfosToolStripMenuItem.Click
-        MessageBox.Show("O jogo é ganho ao chegar ao tamanho 860!" & vbCrLf & "Ao todo são 900 campos possiveis de preenchimento.", "Informações adicionais", MessageBoxButtons.OK, MessageBoxIcon.Information)
+    Private Function CalculaVelocidadeMaxima(Dimensao As Integer, ValorMinimoDeTick As Integer) As Integer
+        Return 1000 / (Dimensao + ValorMinimoDeTick)
+    End Function
+
+    Private Sub OpçõesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OpçõesToolStripMenuItem.Click
+        AboutBox1.Show()
+    End Sub
+
+
+    Private Sub ComoGanharToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ComoGanharToolStripMenuItem.Click
+        Form2.Show()
     End Sub
 End Class
