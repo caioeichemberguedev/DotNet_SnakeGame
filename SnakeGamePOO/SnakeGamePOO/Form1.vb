@@ -198,14 +198,14 @@ Public Class Form1
 
         Select Case e.KeyCode
             Case Keys.Enter
-                If B_Game_Dead = False Then
+                If B_Game_Dead = False And B_Game_Vitoria = False Then
                     StartGame()
                 End If
             Case Keys.R
                 PreparandoGame()
             Case Keys.Escape
                 T_Game_Timer(0).Stop()
-                If MessageBox.Show("Deseja mesmo sair do jogo?", "Message", MessageBoxButtons.YesNo) = DialogResult.Yes Then
+                If MessageBox.Show("Deseja mesmo sair do jogo? =(", "Message", MessageBoxButtons.YesNo) = DialogResult.Yes Then
                     Me.Close()
                 Else
                     T_Game_Timer(0).Start()
@@ -402,8 +402,8 @@ Public Class Form1
     End Function
 
     Private Function VerificaSeGanhouJogo(ByVal TamanhoDaSnake As Integer) As Boolean
-        If ((TamanhoDaSnake * 100) / (TotalDeCampoPossiveis(N_Game_matrix) + 1)) > 70 Then
-            'ao preencher mais que 70% do campo(para que não fique um delay gigante na geração da comida) o jogador é campeão 
+        If ((TamanhoDaSnake * 100) / (TotalDeCampoPossiveis(N_Game_matrix) + 1)) >= 70 Then
+            'ao preencher mais que/Ou 70% do campo(para que não fique um delay gigante na geração da comida) o jogador é campeão 
             B_Game_Vitoria = True
             Return True
         End If
