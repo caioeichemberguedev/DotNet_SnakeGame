@@ -1,2 +1,2 @@
 # DotNet-SnakeGame
-Jogo da cobrinha criado em DotNet
+Snake Game criado em DotNet
